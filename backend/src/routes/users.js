@@ -3,7 +3,7 @@ const User = require('../models/User');
 
 const router = express.Router();
 
-// Middleware pentru validarea creării unui lobby
+// Middleware - validate lobby creation
 function validateCreateLobby(req, res, next) {
   const { name, question1, question2 } = req.body;
   if (!name || !question1 || !question2) {
@@ -12,7 +12,7 @@ function validateCreateLobby(req, res, next) {
   next();
 }
 
-// Middleware pentru validarea alăturării la un lobby
+// Middleware - validate join lobby
 function validateJoinLobby(req, res, next) {
   const { name, question1, question2, lobbyCode } = req.body;
   if (!name || !question1 || !question2 || !lobbyCode) {
@@ -44,7 +44,7 @@ router.post('/create-lobby', validateCreateLobby, async (req, res) => {
   try {
     const { name, question1, question2, avatar } = req.body;
 
-    // Generăm un cod unic pentru lobby
+    // Generate lobby code
     let lobbyCode;
     do {
       lobbyCode = Math.random().toString(36).substring(2, 8).toUpperCase();
@@ -56,7 +56,7 @@ router.post('/create-lobby', validateCreateLobby, async (req, res) => {
       question2,
       avatar,
       lobbyCode,
-      isCreator: true, // Setăm utilizatorul ca fiind creatorul lobby-ului
+      isCreator: true, // Set user as lobby creator
     });
 
     await user.save();
@@ -113,7 +113,7 @@ router.post('/leave-lobby', async (req, res) => {
       return res.status(400).json({ error: 'Missing required fields' });
     }
 
-    // Cautăm utilizatorul în baza de date
+    // Search user in the database
     const user = await User.findOne({ _id: userId, lobbyCode });
     if (!user) {
       return res.status(404).json({ error: 'User not found in this lobby' });

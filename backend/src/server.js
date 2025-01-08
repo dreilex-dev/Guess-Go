@@ -14,7 +14,7 @@ app.use(express.json());
 const userRoutes = require('./routes/users');
 
 // Use routes
-app.use('/api/users', userRoutes); // Asta asigură că toate rutele din users.js încep cu /api/users
+app.use('/api/users', userRoutes); 
 
 // Test route
 app.get('/', (req, res) => {
